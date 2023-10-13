@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+using osu.Game.Beatmaps;
 using osu.Game.Beatmaps.Legacy;
 using osu.Game.IO.Serialization;
 using osu.Game.Online.API;
@@ -17,14 +18,12 @@ public class AttributesRequest
     [JsonPropertyName("ruleset_id")]
     public int? RulesetId { get; set; }
 
-    public Ruleset? GetRuleset()
+    public Ruleset? GetRuleset(Beatmap beatmap)
     {
         if (RulesetId.HasValue)
-            return LegacyHelper.GetRulesetFromLegacyID(RulesetId.Value);
-        if (Ruleset != null)
-            return LegacyHelper.GetRulesetFromShortName(Ruleset);
+            return LegacyHelper.GetRulesetFromLegacyId(RulesetId.Value);
         
-        return null;
+        return Ruleset != null ? LegacyHelper.GetRulesetFromShortName(Ruleset) : LegacyHelper.GetRulesetFromLegacyId(beatmap.BeatmapInfo.Ruleset.OnlineID);
     }
 
     public IEnumerable<Mod> GetMods(Ruleset ruleset)

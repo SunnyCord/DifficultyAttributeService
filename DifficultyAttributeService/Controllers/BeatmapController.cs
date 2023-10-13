@@ -20,11 +20,6 @@ public class BeatmapController : ControllerBase
     public IActionResult Get(int id)
     {
         var beatmap = _beatmapService.GetOrCreate(id);
-        if (beatmap == null)
-        {
-            return NotFound();
-        }
-        
         return Ok(beatmap.Serialize());
     }
     
@@ -32,12 +27,7 @@ public class BeatmapController : ControllerBase
     public IActionResult Post(int id, [FromBody] AttributesRequest request)
     {
         var beatmap = _beatmapService.GetOrCreate(id);
-        if (beatmap == null)
-        {
-            return NotFound();
-        }
-
-        var ruleset = request.GetRuleset() ?? beatmap.BeatmapInfo.Ruleset.CreateInstance();
+        var ruleset = request.GetRuleset(beatmap)!;
         var mods = request.GetMods(ruleset);
         var attributes = ruleset.CreateDifficultyCalculator(new FlatWorkingBeatmap(beatmap)).Calculate(mods);
         return Ok(attributes.Serialize());

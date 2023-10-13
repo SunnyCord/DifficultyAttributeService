@@ -23,7 +23,7 @@ public class BeatmapService
     
     public void Delete(Beatmap obj) => _beatmapRepository.Delete(obj);
 
-    public Beatmap? GetOrCreate(int id)
+    public Beatmap GetOrCreate(int id)
     {
         var beatmap = GetById(id);
         if (beatmap == null)
@@ -32,7 +32,7 @@ public class BeatmapService
             req.Perform();
 
             using var reader = new LineBufferedReader(req.ResponseStream);
-            beatmap = Decoder.GetDecoder<Beatmap>(reader).Decode(reader);
+            beatmap = new LegacyBeatmapDecoder().Decode(reader);
             Add(beatmap);
         }
         return beatmap;

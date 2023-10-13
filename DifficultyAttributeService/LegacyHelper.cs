@@ -8,37 +8,26 @@ namespace DifficultyAttributeService;
 
 public class LegacyHelper
 {
-    public static Ruleset GetRulesetFromLegacyID(int id)
+    public static Ruleset GetRulesetFromLegacyId(int id)
     {
-        switch (id)
+        return id switch
         {
-            case 0:
-                return new OsuRuleset();
-            case 1:
-                return new TaikoRuleset();
-            case 2:
-                return new CatchRuleset();
-            case 3:
-                return new ManiaRuleset();
-            default:
-                throw new ArgumentException("Unknown ruleset id");
-            
-        }
+            0 => new OsuRuleset(),
+            1 => new TaikoRuleset(),
+            2 => new CatchRuleset(),
+            3 => new ManiaRuleset(),
+            _ => throw new ArgumentException("Unknown ruleset id")
+        };
     }
     public static Ruleset GetRulesetFromShortName(string name)
     {
-        switch (name)
+        return name switch
         {
-            case "osu":
-                return new OsuRuleset();
-            case "taiko":
-                return new TaikoRuleset();
-            case "fruits":
-                return new CatchRuleset();
-            case "mania":
-                return new ManiaRuleset();
-            default:
-                throw new ArgumentException("Unknown ruleset name");
-        }
+            "osu" => new OsuRuleset(),
+            "taiko" => new TaikoRuleset(),
+            "fruits" => new CatchRuleset(),
+            "mania" => new ManiaRuleset(),
+            _ => throw new ArgumentException("Unknown ruleset name")
+        };
     }
 }
