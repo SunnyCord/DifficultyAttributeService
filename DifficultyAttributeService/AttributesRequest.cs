@@ -33,25 +33,24 @@ public class AttributesRequest
         if (Mods.ValueKind == JsonValueKind.Number)
             mods.AddRange(ruleset.ConvertFromLegacyMods((LegacyMods)Mods.GetInt32()));
 
-        if (Mods.ValueKind == JsonValueKind.Array)
+        if (Mods.ValueKind != JsonValueKind.Array) return mods;
+        
+        foreach (var item in Mods.EnumerateArray())
         {
-            foreach (var item in Mods.EnumerateArray())
+            if (item.ValueKind == JsonValueKind.String)
             {
-                if (item.ValueKind == JsonValueKind.String)
-                {
-                    var modAcronym = item.GetString() ?? string.Empty;
-                    var mod = ruleset.CreateModFromAcronym(modAcronym);
-                    if (mod != null)
-                        mods.Add(mod);
-                }
-                else
-                {
-                    var apiMod = item.GetRawText().Deserialize<APIMod>();
-                    mods.Add(apiMod.ToMod(ruleset));
-                }
+                var modAcronym = item.GetString() ?? string.Empty;
+                var mod = ruleset.CreateModFromAcronym(modAcronym);
+                if (mod != null)
+                    mods.Add(mod);
+            }
+            else
+            {
+                var apiMod = item.GetRawText().Deserialize<APIMod>();
+                mods.Add(apiMod.ToMod(ruleset));
             }
         }
-        
+
         return mods;
     }
 }
