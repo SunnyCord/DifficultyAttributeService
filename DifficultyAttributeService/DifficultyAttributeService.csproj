@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ppy.osu.Game" Version="2023.1013.0" />
+        <PackageReference Include="ppy.osu.Game.Rulesets.Catch" Version="2023.1013.0" />
+        <PackageReference Include="ppy.osu.Game.Rulesets.Mania" Version="2023.1013.0" />
+        <PackageReference Include="ppy.osu.Game.Rulesets.Osu" Version="2023.1013.0" />
+        <PackageReference Include="ppy.osu.Game.Rulesets.Taiko" Version="2023.1013.0" />
+        <PackageReference Include="Sentry" Version="3.40.1" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+</Project>
