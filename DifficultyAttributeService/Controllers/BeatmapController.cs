@@ -24,6 +24,7 @@ public class BeatmapController : ControllerBase
     }
     
     [HttpPost("{id}/attributes")]
+    [AllowEmptyJsonBody]
     public IActionResult Post(int id, [FromBody] AttributesRequest request)
     {
         var beatmap = _beatmapService.GetOrCreate(id);
