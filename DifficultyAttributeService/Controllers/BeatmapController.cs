@@ -1,4 +1,5 @@
-﻿using DifficultyAttributeService.Services;
+﻿using System.Net.Mime;
+using DifficultyAttributeService.Services;
 using Microsoft.AspNetCore.Mvc;
 using osu.Game.Beatmaps;
 using osu.Game.IO.Serialization;
@@ -20,7 +21,7 @@ public class BeatmapController : ControllerBase
     public IActionResult Get(int id)
     {
         var beatmap = _beatmapService.GetOrCreate(id);
-        return Ok(beatmap.Serialize());
+        return Content(beatmap.Serialize(), "application/json");
     }
     
     [HttpPost("{id}/attributes")]
@@ -31,6 +32,6 @@ public class BeatmapController : ControllerBase
         var ruleset = request.GetRuleset(beatmap)!;
         var mods = request.GetMods(ruleset);
         var attributes = ruleset.CreateDifficultyCalculator(new FlatWorkingBeatmap(beatmap)).Calculate(mods);
-        return Ok(attributes.Serialize());
+        return Content(attributes.Serialize(), "application/json");
     }
 }
