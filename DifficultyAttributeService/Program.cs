@@ -10,17 +10,25 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddSingleton<IConnectionMultiplexer>(provider =>
+{
+    var configurationOptions = new ConfigurationOptions
+    {
+        EndPoints = { "localhost" },
+        AbortOnConnectFail = false,
+    };
+
+    var redis = ConnectionMultiplexer.Connect(configurationOptions);
+    return redis;
+});
+
 builder.Services.AddScoped<IDatabase>(provider =>
 {
-    var redis =  ConnectionMultiplexer.Connect("localhost", options =>
-    {
-        options.AbortOnConnectFail = false;
-    });
+    var redis = provider.GetRequiredService<IConnectionMultiplexer>();
     return redis.GetDatabase();
 });
 
 builder.Services.AddScoped<RepositoryBase<Beatmap>, BeatmapRepository>();
-    
 builder.Services.AddScoped<BeatmapService>();
 
 var app = builder.Build();
