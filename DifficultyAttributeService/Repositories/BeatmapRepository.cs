@@ -4,7 +4,7 @@ using osu.Game.IO.Serialization;
 
 namespace DifficultyAttributeService.Repositories;
 
-public class BeatmapRepository : RepositoryBase<Beatmap>
+public class BeatmapRepository : RedisRepositoryBase<Beatmap>
 {
     private readonly IDatabase _redis;
     
@@ -28,26 +28,26 @@ public class BeatmapRepository : RepositoryBase<Beatmap>
         _redis = redis;
     }
 
-    public override Beatmap? GetById(int id)
+    public override async Task<Beatmap?> GetByIdAsync(int id)
     {
-        var beatmap = _redis.StringGet(GetCacheKey(id));
+        var beatmap = await _redis.StringGetAsync(GetCacheKey(id));
         return beatmap.HasValue ? beatmap.ToString().Deserialize<Beatmap>() : null;
     }
 
-    public override void Add(Beatmap obj)
+    public override async Task AddAsync(Beatmap obj)
     {
         TimeSpan expiry = GetExpiry(obj.BeatmapInfo.Status);
-        _redis.StringSet(GetCacheKey(obj.BeatmapInfo.OnlineID), obj.Serialize(), expiry);
+        await _redis.StringSetAsync(GetCacheKey(obj.BeatmapInfo.OnlineID), obj.Serialize(), expiry);
     }
     
-    public override void Update(Beatmap obj)
+    public override async Task UpdateAsync(Beatmap obj)
     {
         TimeSpan expiry = GetExpiry(obj.BeatmapInfo.Status);
-        _redis.StringSet(GetCacheKey(obj.BeatmapInfo.OnlineID), obj.Serialize(), expiry);
+        await _redis.StringSetAsync(GetCacheKey(obj.BeatmapInfo.OnlineID), obj.Serialize(), expiry);
     }
     
-    public override void Delete(Beatmap obj)
+    public override async Task DeleteAsync(Beatmap obj)
     {
-        _redis.KeyDelete(GetCacheKey(obj.BeatmapInfo.OnlineID));
+        await _redis.KeyDeleteAsync(GetCacheKey(obj.BeatmapInfo.OnlineID));
     }
 }

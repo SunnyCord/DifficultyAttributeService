@@ -28,7 +28,7 @@ builder.Services.AddScoped<IDatabase>(provider =>
     return redis.GetDatabase();
 });
 
-builder.Services.AddScoped<RepositoryBase<Beatmap>, BeatmapRepository>();
+builder.Services.AddScoped<RedisRepositoryBase<Beatmap>, BeatmapRepository>();
 builder.Services.AddScoped<BeatmapService>();
 
 var app = builder.Build();

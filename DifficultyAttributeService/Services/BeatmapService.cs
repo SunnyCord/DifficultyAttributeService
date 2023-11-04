@@ -8,32 +8,32 @@ namespace DifficultyAttributeService.Services;
 
 public class BeatmapService
 {
-    private readonly RepositoryBase<Beatmap> _beatmapRepository;
+    private readonly RedisRepositoryBase<Beatmap> _beatmapRepository;
     
-    public BeatmapService(RepositoryBase<Beatmap> beatmapRepository)
+    public BeatmapService(RedisRepositoryBase<Beatmap> beatmapRepository)
     {
         _beatmapRepository = beatmapRepository;
     }
     
-    public Beatmap? GetById(int id) => _beatmapRepository.GetById(id);
+    public async Task<Beatmap?> GetByIdAsync(int id) => await _beatmapRepository.GetByIdAsync(id);
     
-    public void Add(Beatmap obj) => _beatmapRepository.Add(obj);
+    public async Task AddAsync(Beatmap obj) => await _beatmapRepository.AddAsync(obj);
     
-    public void Update(Beatmap obj) => _beatmapRepository.Update(obj);
+    public async Task UpdateAsync(Beatmap obj) => await _beatmapRepository.UpdateAsync(obj);
     
-    public void Delete(Beatmap obj) => _beatmapRepository.Delete(obj);
+    public async Task DeleteAsync(Beatmap obj) => await _beatmapRepository.DeleteAsync(obj);
 
-    public Beatmap GetOrCreate(int id)
+    public async Task<Beatmap> GetOrCreate(int id)
     {
-        var beatmap = GetById(id);
+        var beatmap = await GetByIdAsync(id);
         if (beatmap == null)
         {
             using var req = new OsuWebRequest($"https://osu.ppy.sh/osu/{id}");
-            req.Perform();
+            await req.PerformAsync();
 
             using var reader = new LineBufferedReader(req.ResponseStream);
             beatmap = new LegacyBeatmapDecoder().Decode(reader);
-            Add(beatmap);
+            AddAsync(beatmap);
         }
         return beatmap;
     }
