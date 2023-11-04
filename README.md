@@ -47,4 +47,4 @@ The recommended way to install is using Docker and the provided Dockerfile.
 
 ## Caching
 
-osu! beatmaps are cached in JSON format using redis. The duration for maps with a leaderboard maps is 14 days. Qualified maps have 7 days and everything else is one day.
+osu! beatmaps are cached in JSON format using redis. The duration for maps with a leaderboard is 14 days. Qualified maps have 7 days and everything else is one day.
