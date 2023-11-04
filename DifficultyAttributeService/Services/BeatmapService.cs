@@ -23,7 +23,7 @@ public class BeatmapService
     
     public async Task DeleteAsync(Beatmap obj) => await _beatmapRepository.DeleteAsync(obj);
 
-    public async Task<Beatmap> GetOrCreate(int id)
+    public async Task<Beatmap> GetOrCreateAsync(int id)
     {
         var beatmap = await GetByIdAsync(id);
         if (beatmap == null)
